@@ -1086,7 +1086,7 @@ public class MetodosGenerales {
 
         //Documento documento = convertirDocumento(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "ID_DOCUMENTO").concat(".pdf"), "Nota Simple OCR")
         //notaSimpleNodulos.setDocumento(fact.createVidaLaboralDocumento(documento));
-        String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "ID_DOCUMENTO").concat(".pdf");
+        String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO").concat(".pdf");
         String listaParaExt[] = nombreDocumento.split("_{3}");
 
         notaSimpleNodulos.setIdSolicitudOCR(Integer.valueOf(listaParaExt[1].split("\\.")[0]));
@@ -2051,7 +2051,7 @@ public class MetodosGenerales {
                             arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().add(notaSimpleNodulos);
                         } catch (Exception ex) {
                             if (ex.getMessage() != null) {
-                                String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "ID_DOCUMENTO").concat(".pdf");
+                                String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO").concat(".pdf");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento Nota Simple OCR con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
