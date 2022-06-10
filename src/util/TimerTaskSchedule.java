@@ -56,6 +56,8 @@ public class TimerTaskSchedule {
             props.setProperty("mail.smtp.user", "techidbpo@gmail.com");
             props.setProperty("mail.smtp.auth", "true");
             props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            props.put("mail.smtp.starttls.required", "true");
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
             javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress("techidbpo@gmail.com"));
