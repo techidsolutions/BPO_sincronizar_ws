@@ -150,8 +150,8 @@ public enum ConfigurationTTipoCarga {
     SUSTITUCION_FIDEICOMISA("SustitucionFideicomisa"),
     @XmlEnumValue("OtrosGRAVE")
     OTROS_GRAVE("OtrosGRAVE"),
-    @XmlEnumValue("Novaci\u00f3n")
-    NOVACIÃ’N("Novaci\u00f3n");
+    @XmlEnumValue("Novación")
+    NOVACIÓN("Novación"); 
     private final String value;
 
     ConfigurationTTipoCarga(String v) {

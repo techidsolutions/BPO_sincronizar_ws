@@ -106,8 +106,8 @@ public enum ConfigurationTProvincia {
     CIUDAD_REAL("CiudadReal"),
     @XmlEnumValue("Cordoba")
     CORDOBA("Cordoba"),
-    @XmlEnumValue("ACoru\u00f1a")
-    A_CORUÃ‘A("ACoru\u00f1a"),
+    @XmlEnumValue("ACoruña")
+    A_CORUÑA("ACoruña"),
     @XmlEnumValue("Cuenca")
     CUENCA("Cuenca"),
     @XmlEnumValue("Girona")

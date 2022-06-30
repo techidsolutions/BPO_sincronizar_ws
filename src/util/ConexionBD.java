@@ -41,4 +41,5 @@ public class ConexionBD {
        cadenaConexion = "jdbc:mysql://" + this.nombreHost + "/liferay"; // Se crea la cadena de conexión
        return DriverManager.getConnection(cadenaConexion, this.usuario, this.clave); 
     }
+           
 }

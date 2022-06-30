@@ -157,10 +157,10 @@ public class MetodosGenerales {
             JSch jsch = new JSch();
 
             try {
-                 session= jsch.getSession(userFtp, ipFtp);
+                session = jsch.getSession(userFtp, ipFtp);
                 Properties properties = new Properties();
-               // properties.setProperty("StrictHostKeyChecking", "no");
-               session.setConfig("StrictHostKeyChecking", "no");
+                // properties.setProperty("StrictHostKeyChecking", "no");
+                session.setConfig("StrictHostKeyChecking", "no");
                 session.connect();
             } catch (JSchException ex) {
             }
@@ -184,41 +184,43 @@ public class MetodosGenerales {
             Properties mainProperties = new Properties();
             mainProperties.load(fileInputStream);
             //buscando en el fichero de conf la llave "ipFtp"
-           String ipFtp = mainProperties.getProperty("ipFtp");
-           
+            String ipFtp = mainProperties.getProperty("ipFtp");
+
             //buscando en el fichero de conf la llave "userFtp"
-           String userFtp = mainProperties.getProperty("userFtp");
-       
+            String userFtp = mainProperties.getProperty("userFtp");
+
             //buscando en el fichero de conf la llave "passWdFtp"
-           String passWdFtp = mainProperties.getProperty("passWdFtp");
-           //buscando en el fichero de conf la llave "portFtp"
-           String portFtp =mainProperties.getProperty("portFtp");
+            String passWdFtp = mainProperties.getProperty("passWdFtp");
+            //buscando en el fichero de conf la llave "portFtp"
+            String portFtp = mainProperties.getProperty("portFtp");
             //Cerrando el fichero
             fileInputStream.close();
             JSch jsch = new JSch();
 
             try {
-                 session = jsch.getSession(userFtp, ipFtp, new Integer(portFtp));
+                session = jsch.getSession(userFtp, ipFtp, new Integer(portFtp));
                 session.setPassword(passWdFtp);
-                Properties properties=new Properties();  
+                Properties properties = new Properties();
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.connect();
             } catch (Exception ex) {
                 String o = ex.toString();
+                System.out.println(ex.getMessage());
             }
             return session;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
         return session;
     }
 
     /**
-     * M√©todo que parsea y lee un documento XML para devolver una lista con la
-     * informaci√≥n de cada componente del formulario.
+     * MÈtodo que parsea y lee un documento XML para devolver una lista con la
+     * informaciÛn de cada componente del formulario.
      *
      * @param rutaArchivo Ruta del archivo.
-     * @return ArrayList (ComponenteFormulario) Lista con la informaci√≥n de los
+     * @return ArrayList (ComponenteFormulario) Lista con la informaciÛn de los
      * componentes del formulario.
      */
     public static DatosXML leerXML(String rutaArchivo) {
@@ -724,7 +726,7 @@ public class MetodosGenerales {
             cal.setTime(date);
             xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
         } catch (ParseException | DatatypeConfigurationException ex) {
-            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         return xmlGregCal;
     }
@@ -809,7 +811,7 @@ public class MetodosGenerales {
                 persona.setIdentificacion(fact.createPersonaIdentificacion(identificacion));
                 persona.setTipoRegimenEconomico(ConfigurationTTipoRegimenEconomica.fromValue(MetodosGenerales.devolverValorDadoNombre(listaComponentesTitular, "REGIMEN_ECONOMICO")));
 
-                //T√≠tulo
+                //TÌtulo
                 ArrayOfTitulo arrayOfTitulo = new ArrayOfTitulo();
                 Titulo titulo = new Titulo();
                 titulo.setFechaEscritura(MetodosGenerales.devolverValorDadoNombre(listaComponentesTitular, "TLO_FECHA_ESCRITURA").equals("") ? MetodosGenerales.convertirXMLGregorianCalendar("1900-01-01") : MetodosGenerales.convertirXMLGregorianCalendar(MetodosGenerales.devolverValorDadoNombre(listaComponentesTitular, "TLO_FECHA_ESCRITURA")));
@@ -959,9 +961,11 @@ public class MetodosGenerales {
             ficheroStream.read(contenido);
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            System.out.println(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            System.out.println(ex.getMessage());
         }
         documento.setFileName(fact.createDocumentoFileName(nombreDocumento));
         documento.setContent(fact.createDocumentoContent(contenido));
@@ -980,7 +984,7 @@ public class MetodosGenerales {
         try {
             channelSftp.get(fuente, destino);
         } catch (SftpException ex) {
-            Logger.getLogger(TimerTaskSchedule.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TimerTaskSchedule.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         File archivoTrazas = new File(destino);
         Scanner scanner = null;
@@ -1086,7 +1090,7 @@ public class MetodosGenerales {
 
         //Documento documento = convertirDocumento(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "ID_DOCUMENTO").concat(".pdf"), "Nota Simple OCR")
         //notaSimpleNodulos.setDocumento(fact.createVidaLaboralDocumento(documento));
-        String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO").concat(".pdf");
+        String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "ID_DOCUMENTO").concat(".pdf");
         String listaParaExt[] = nombreDocumento.split("_{3}");
 
         notaSimpleNodulos.setIdSolicitudOCR(Integer.valueOf(listaParaExt[1].split("\\.")[0]));
@@ -1232,7 +1236,7 @@ public class MetodosGenerales {
         tasacion.setValorTasacionEstadistico(fact.createTasacionValorTasacionEstadistico(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "VALOR_TASACION_ESTADISTICO").equals("") ? 0.00 : Double.valueOf(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "VALOR_TASACION_ESTADISTICO").replaceAll(",", "."))));
         tasacion.setVisitaInmueble(ConfigurationTVisitaInmueble.fromValue(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "VISITA_INMUEBLE")));
 
-        //Finca Tasaci√≥n
+        //Finca TasaciÛn
         ArrayOfFincaTasacion arrayOfFincaTasacion = new ArrayOfFincaTasacion();
         for (modelo.FincaTasacion datosFinca : datosXML.getListaFincas()) {
             FincaTasacion fincaTasacion = new FincaTasacion();
@@ -1307,7 +1311,7 @@ public class MetodosGenerales {
                     persona.setIdentificacion(fact.createPersonaIdentificacion(identificacion));
                     persona.setTipoRegimenEconomico(ConfigurationTTipoRegimenEconomica.fromValue(MetodosGenerales.devolverValorDadoNombre(listaComponentesTitular, "REGIMEN_ECONOMICO")));
 
-                    //T√≠tulo
+                    //TÌtulo
                     ArrayOfTitulo arrayOfTitulo = new ArrayOfTitulo();
                     Titulo titulo = new Titulo();
                     titulo.setFechaEscritura(MetodosGenerales.devolverValorDadoNombre(listaComponentesTitular, "TLO_FECHA_ESCRITURA").equals("") ? MetodosGenerales.convertirXMLGregorianCalendar("1900-01-01") : MetodosGenerales.convertirXMLGregorianCalendar(MetodosGenerales.devolverValorDadoNombre(listaComponentesTitular, "TLO_FECHA_ESCRITURA")));
@@ -1361,7 +1365,7 @@ public class MetodosGenerales {
         
         
 
-         //Identificaci√≥n del solicitante
+         //IdentificaciÛn del solicitante
          Identificacion identificacion = new Identificacion();
          identificacion.setNumeroIdentificacion(fact.createIdentificacionNumeroIdentificacion(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NUMERO_IDENTIFICACION")));
          identificacion.setTipoIdentificacion(PersonModelIdentifierType.fromValue(MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "TIPO_IDENTIFICACION")));
@@ -1435,7 +1439,7 @@ public class MetodosGenerales {
         try {
             channelSftp.get(fuente, destino);
         } catch (SftpException ex) {
-            Logger.getLogger(TimerTaskSchedule.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TimerTaskSchedule.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         File archivoTrazas = new File(destino);
         Scanner scanner = null;
@@ -1464,6 +1468,9 @@ public class MetodosGenerales {
      * @return
      */
     public static Integer descargarDocumentos(ChannelSftp channelSftpTech, ConfigurationTTipoDocumento tipoDocumento) {
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "descargarDocumentos " + tipoDocumento.value());
+        System.out.println("descargarDocumentos " + tipoDocumento.value());
         ArrayOfDatosEnvio arrayOfDatosEnvio = null;
         try {
             arrayOfDatosEnvio = getPendingDocuments(tipoDocumento);
@@ -1566,6 +1573,9 @@ public class MetodosGenerales {
     //public static Boolean descargarDocumentos(ChannelSftp channelSftpTech){
     public static DocumentosDescargados descargarDocumentos(ChannelSftp channelSftpTech) {
 
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "descargarDocumentos ");
+        System.out.println("descargarDocumentos ");
+
         //Prueba descargar Notas
         /*
          Integer descargdaNotasNodulos = 0;
@@ -1599,6 +1609,10 @@ public class MetodosGenerales {
      return port.getPendingDocuments(tipoDocumento);
      }*/
     public static ResultadoSubida subirDocumentos(ChannelSftp channelSftpTech) {
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "subirDocumentos ");
+        System.out.println("subirDocumentos ");
+
         NotificacionErrorAlCargarDocumento notificacionIRPF = subirIRPF(channelSftpTech);
         NotificacionErrorAlCargarDocumento notificacionVidaLaboral = subirVidaLaboral(channelSftpTech);
         NotificacionErrorAlCargarDocumento notificacionNomina = subirNomina(channelSftpTech);
@@ -1704,7 +1718,7 @@ public class MetodosGenerales {
                 }
             }
         } catch (SftpException ex) {
-            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
 
     }
@@ -1747,7 +1761,7 @@ public class MetodosGenerales {
                                     String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                                     String listaParaExt[] = nombreDocumento.split("_{3}");
                                     if (listaParaExt.length == 2) {
-                                        notificacion.setDescripcionExcepcion("Error en el documento IRPF con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                        notificacion.setDescripcionExcepcion("Error en el documento IRPF con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                     } else {
                                         notificacion.setDescripcionExcepcion("Error en el nombre del IRPF:" + nombreDocumento);
                                     }
@@ -1769,15 +1783,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if (result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta")) {
+                        if (result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta")) {
                             IRPF iRPF = arrayOfIRPF.getIRPF().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "IRPF", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(iRPF.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/IRPF/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if (result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n")) {
+                        } else if (result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn")) {
                             IRPF iRPF = arrayOfIRPF.getIRPF().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "IRPF", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(iRPF.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "IRPF", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(iRPF.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/IRPF/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -1785,7 +1799,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveIRPFs: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveIRPFs: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1827,9 +1841,9 @@ public class MetodosGenerales {
                             String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                             String listaParaExt[] = nombreDocumento.split("_{3}");
                             if (listaParaExt.length == 2) {
-                                notificacion.setDescripcionExcepcion("Error en el documento N√≥mina con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                notificacion.setDescripcionExcepcion("Error en el documento NÛmina con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                             } else {
-                                notificacion.setDescripcionExcepcion("Error en el nombre de la N√≥mina:" + nombreDocumento);
+                                notificacion.setDescripcionExcepcion("Error en el nombre de la NÛmina:" + nombreDocumento);
                             }
                             notificacion.setExisteError(true);
                             return notificacion;
@@ -1847,15 +1861,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if (result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta")) {
+                        if (result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta")) {
                             Nomina nomina = arrayOfNomina.getNomina().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Nomina", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(nomina.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Nomina/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if (result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n")) {
+                        } else if (result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn")) {
                             Nomina nomina = arrayOfNomina.getNomina().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Nomina", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(nomina.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Nomina", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(nomina.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Nomina/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -1863,7 +1877,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveNominas: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveNominas: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1903,7 +1917,7 @@ public class MetodosGenerales {
                                 String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
-                                    notificacion.setDescripcionExcepcion("Error en el documento Vida Laboral con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                    notificacion.setDescripcionExcepcion("Error en el documento Vida Laboral con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                 } else {
                                     notificacion.setDescripcionExcepcion("Error en el nombre de la Vida Laboral:" + nombreDocumento);
                                 }
@@ -1923,15 +1937,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if ((result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta"))) {
+                        if ((result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta"))) {
                             VidaLaboral vidaLaboral = arrayOfVidaLaboral.getVidaLaboral().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Vida Laboral", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(vidaLaboral.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Vida Laboral/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n"))) {
+                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn"))) {
                             VidaLaboral vidaLaboral = arrayOfVidaLaboral.getVidaLaboral().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Vida Laboral", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(vidaLaboral.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Vida Laboral", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(vidaLaboral.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Vida Laboral/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -1939,7 +1953,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveVidasLaborales: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveVidasLaborales: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1979,7 +1993,7 @@ public class MetodosGenerales {
                                 String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
-                                    notificacion.setDescripcionExcepcion("Error en el documento KO con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                    notificacion.setDescripcionExcepcion("Error en el documento KO con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                 } else {
                                     notificacion.setDescripcionExcepcion("Error en el nombre del documento KO:" + nombreDocumento);
                                 }
@@ -1998,15 +2012,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if (result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta")) {
+                        if (result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta")) {
                             KODocument kODocument = arrayOfKODocument.getKODocument().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Documento KO", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(kODocument.getIdSolicitudOcr()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/DocumentosKO/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n"))) {
+                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn"))) {
                             KODocument kODocument = arrayOfKODocument.getKODocument().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Documento KO", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(kODocument.getIdSolicitudOcr()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Documento KO", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(kODocument.getIdSolicitudOcr()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/DocumentosKO/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -2014,7 +2028,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveKODocuments: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveKODocuments: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2051,10 +2065,10 @@ public class MetodosGenerales {
                             arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().add(notaSimpleNodulos);
                         } catch (Exception ex) {
                             if (ex.getMessage() != null) {
-                                String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO").concat(".pdf");
+                                String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "ID_DOCUMENTO").concat(".pdf");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
-                                    notificacion.setDescripcionExcepcion("Error en el documento Nota Simple OCR con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                    notificacion.setDescripcionExcepcion("Error en el documento Nota Simple OCR con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                 } else {
                                     notificacion.setDescripcionExcepcion("Error en el nombre de la Nota Simple OCR:" + nombreDocumento);
                                 }
@@ -2074,15 +2088,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if ((result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta"))) {
+                        if ((result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta"))) {
                             NotaSimpleNodulos notaSimpleNodulos = arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Nota Simple OCR", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(notaSimpleNodulos.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/NotaSimpleOCR/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n"))) {
+                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn"))) {
                             NotaSimpleNodulos notaSimpleNodulos = arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Nota Simple OCR", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(notaSimpleNodulos.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Nota Simple OCR", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(notaSimpleNodulos.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/NotaSimpleOCR/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -2090,7 +2104,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveNotasSimplesNodulos: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveNotasSimplesNodulos: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2130,7 +2144,7 @@ public class MetodosGenerales {
                                 String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
-                                    notificacion.setDescripcionExcepcion("Error en el documento Recibo con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                    notificacion.setDescripcionExcepcion("Error en el documento Recibo con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                 } else {
                                     notificacion.setDescripcionExcepcion("Error en el nombre de la Recibo:" + nombreDocumento);
                                 }
@@ -2150,15 +2164,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if ((result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta"))) {
+                        if ((result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta"))) {
                             Recibo recibo = arrayOfRecibo.getRecibo().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Recibo", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(recibo.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Recibo/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n"))) {
+                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn"))) {
                             Recibo recibo = arrayOfRecibo.getRecibo().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Recibo", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(recibo.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Recibo", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(recibo.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Recibo/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -2166,7 +2180,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveRecibos: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveRecibos: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2206,7 +2220,7 @@ public class MetodosGenerales {
                                 String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
-                                    notificacion.setDescripcionExcepcion("Error en el documento Tasacion con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                    notificacion.setDescripcionExcepcion("Error en el documento Tasacion con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                 } else {
                                     notificacion.setDescripcionExcepcion("Error en el nombre de la Tasacion:" + nombreDocumento);
                                 }
@@ -2226,15 +2240,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if ((result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta"))) {
+                        if ((result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta"))) {
                             Tasacion tasacion = arrayOfTasacion.getTasacion().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Tasacion", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(tasacion.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Tasacion/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n"))) {
+                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn"))) {
                             Tasacion tasacion = arrayOfTasacion.getTasacion().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Tasacion", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(tasacion.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Tasacion", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(tasacion.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Tasacion/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -2242,7 +2256,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveTasaciones: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveTasaciones: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2280,7 +2294,7 @@ public class MetodosGenerales {
      int indice = 0;
      for (OCRWSResult result : lista) {
      System.out.println(result.getDescripcionResultado().getValue());    
-     if (result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta")){
+     if (result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta")){
      Recibo recibo = arrayOfRecibo.getRecibo().get(indice);
      TimerTaskSchedule.generarTraza(channelSftpTech, "Recibo", listaNombreArchivos.get(indice), "Subido al Grupo BC",String.valueOf(recibo.getIdSolicitudOCR()), "Subidos");
      channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Recibo/".concat(listaNombreArchivos.get(indice)));
@@ -2315,7 +2329,7 @@ public class MetodosGenerales {
                         
                         
 
-     TimerTaskSchedule.generarTraza(channelSftpTech, "Tasaci√≥n", archivo.getFilename(), "Subido al Grupo BC", String.valueOf(tasacion.getIdSolicitudOCR()), "Subidos");
+     TimerTaskSchedule.generarTraza(channelSftpTech, "TasaciÛn", archivo.getFilename(), "Subido al Grupo BC", String.valueOf(tasacion.getIdSolicitudOCR()), "Subidos");
      channelSftpTech.put(rutaProcesadosTechFTP.concat(archivo.getFilename()), "/home/BPO/SubidosWS/Tasacion/".concat(archivo.getFilename()));
      channelSftpTech.rm(rutaProcesadosTechFTP.concat(archivo.getFilename()));
      }
@@ -2329,7 +2343,7 @@ public class MetodosGenerales {
      }
      }
      } catch (SftpException ex) {
-     Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, null, ex);
+     Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
      }
      }
      */
@@ -2373,7 +2387,7 @@ public class MetodosGenerales {
                                 String nombreDocumento = MetodosGenerales.devolverValorDadoNombre(datosXML.getListaComponentes(), "NOMBRE_DOCUMENTO");
                                 String listaParaExt[] = nombreDocumento.split("_{3}");
                                 if (listaParaExt.length == 2) {
-                                    notificacion.setDescripcionExcepcion("Error en el documento Nota Simple con ID=" + listaParaExt[1].split("\\.")[0] + " Descripci√≥n:" + ex.getMessage());
+                                    notificacion.setDescripcionExcepcion("Error en el documento Nota Simple con ID=" + listaParaExt[1].split("\\.")[0] + " DescripciÛn:" + ex.getMessage());
                                 } else {
                                     notificacion.setDescripcionExcepcion("Error en el nombre de la Nota Simple:" + nombreDocumento);
                                 }
@@ -2408,15 +2422,15 @@ public class MetodosGenerales {
                     notificacion.setCantidadDocumentos(lista.size());
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
-                        if ((result.getDescripcionResultado().getValue().equals("Grabaci√≥n correcta"))) {
+                        if ((result.getDescripcionResultado().getValue().equals("GrabaciÛn correcta"))) {
                             NotaSimple notaSimple = arrayOfNotaSimple.getNotaSimple().get(indice);
                             TimerTaskSchedule.generarTraza(channelSftpTech, "Nota Simple", listaNombreArchivos.get(indice), "Subido al Grupo BC", String.valueOf(notaSimple.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Nota Simple/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
-                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepci√≥n"))) {
+                        } else if ((result.getDescripcionResultado().getValue().equals("Error, la solicitud no se encuentra en estado pendiente de recepciÛn"))) {
                             NotaSimple notaSimple = arrayOfNotaSimple.getNotaSimple().get(indice);
-                            TimerTaskSchedule.generarTraza(channelSftpTech, "Nota Simple", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est√° pendiente de solicitud", String.valueOf(notaSimple.getIdSolicitudOCR()), "Subidos");
+                            TimerTaskSchedule.generarTraza(channelSftpTech, "Nota Simple", listaNombreArchivos.get(indice), "Subido al Grupo BC:No est· pendiente de solicitud", String.valueOf(notaSimple.getIdSolicitudOCR()), "Subidos");
                             channelSftpTech.put(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)), "/home/BPO/SubidosWS/Nota Simple/".concat(listaNombreArchivos.get(indice)));
                             channelSftpTech.rm(rutaProcesadosTechFTP.concat(listaNombreArchivos.get(indice)));
                             notificacion.setResultadoSubida(true);
@@ -2424,7 +2438,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el m√©todo receiveNotasSimples: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el mÈtodo receiveNotasSimples: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2437,31 +2451,50 @@ public class MetodosGenerales {
         return notificacion;
     }
 
-    static  URL getUrl() {
+    static URL getUrl() {
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "getUrl ");
+        System.out.println("getUrl ");
+
         String serviceUrl = "";
         try {
+
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "file " + direccion.concat("/conf/configFtp_WS.properties"));
+            System.out.println("getUrl file " + direccion.concat("/conf/configFtp_WS.properties"));
+
             File file = new File(direccion.concat("/conf/configFtp_WS.properties"));
             FileInputStream fileInputStream = new FileInputStream(file);
             Properties mainProperties = new Properties();
             mainProperties.load(fileInputStream);
+ 
             serviceUrl = mainProperties.getProperty("serviceUrl");
+
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "serviceUrl " + serviceUrl);
+            System.out.println("getUrl serviceUrl " + serviceUrl);
             //Cerrando el fichero
             fileInputStream.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            System.out.println(ex.getMessage());
+        } catch (Exception ex) {
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            System.out.println(ex.getMessage());
         }
         if (serviceUrl != "") {
             try {
                 URL url = new URL(serviceUrl);
                 return url;
             } catch (MalformedURLException ex) {
-                Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MetodosGenerales.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                System.out.println(ex.getMessage());
             }
         }
         return null;
     }
-    
+
     private static ArrayOfOCRWSResult receiveNotasSimples(servicios.ArrayOfNotaSimple notasSimples) {
         servicios.OcrReceiver service = new servicios.OcrReceiver(getUrl());
         //System.out.println(service.getWSDLDocumentLocation());
@@ -2471,7 +2504,15 @@ public class MetodosGenerales {
     }
 
     private static ArrayOfOCRWSResult receiveNotasSimplesNodulos(servicios.ArrayOfNotaSimpleNodulos notasSimplesNodulos) {
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "receiveNotasSimplesNodulos " + notasSimplesNodulos.getNotaSimpleNodulos().toString());
+        System.out.println("receiveNotasSimplesNodulos " + notasSimplesNodulos.getNotaSimpleNodulos().toString());
+
         servicios.OcrReceiver service = new servicios.OcrReceiver(getUrl());
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "receiveNotasSimplesNodulos service " + service.getWSDLDocumentLocation());
+        System.out.println("receiveNotasSimplesNodulos service " + service.getWSDLDocumentLocation());
+
         servicios.IOcrReceiver port = service.getBasicHttpBindingIOcrReceiver();
         ArrayOfOCRWSResult result = port.receiveNotasSimplesNodulos(notasSimplesNodulos);
         return result;
@@ -2522,8 +2563,14 @@ public class MetodosGenerales {
     }
 
     private static ArrayOfDatosEnvio getPendingDocuments(servicios.ConfigurationTTipoDocumento tipoDocumento) {
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "getPendingDocuments " + tipoDocumento.value());
+        System.out.println("getPendingDocuments " + tipoDocumento.value());
+
         servicios.OcrReceiver service = new servicios.OcrReceiver(getUrl());
-        System.out.println(service.getWSDLDocumentLocation());
+
+        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "getPendingDocuments service " + service.getWSDLDocumentLocation());
+        System.out.println("getPendingDocuments service " + service.getWSDLDocumentLocation());
         servicios.IOcrReceiver port = service.getBasicHttpBindingIOcrReceiver();
         return port.getPendingDocuments(tipoDocumento);
     }
@@ -2533,18 +2580,35 @@ public class MetodosGenerales {
      */
     private static void enviarCorreoNotificacionError(String textoError) {
         try {
+
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "enviarCorreoNotificacionError " + textoError);
+            System.out.println("enviarCorreoNotificacionError " + textoError);
+
+//            Properties props = new Properties();
+//            props.setProperty("mail.smtp.host", "smtp.gmail.com");
+//            props.setProperty("mail.smtp.starttls.enable", "true");
+//            props.setProperty("mail.smtp.port", "587");
+//            props.setProperty("mail.smtp.user", "techidbpo@gmail.com");
+//            props.setProperty("mail.smtp.auth", "true");
+//            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+//            props.put("mail.smtp.starttls.required", "true");
+//            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+//            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
+//            MimeMessage message = new MimeMessage(session);
+//            message.setFrom(new InternetAddress("techidbpo@gmail.com"));
+            
             Properties props = new Properties();
-            props.setProperty("mail.smtp.host", "smtp.gmail.com");
+            props.setProperty("mail.smtp.host", "hm667.neodigit.net");
             props.setProperty("mail.smtp.starttls.enable", "true");
             props.setProperty("mail.smtp.port", "587");
-            props.setProperty("mail.smtp.user", "techidbpo@gmail.com");
+            props.setProperty("mail.smtp.user", "bpo.bot@tidinternationalgroup.com");
             props.setProperty("mail.smtp.auth", "true");
-            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            props.put("mail.smtp.ssl.trust", "hm667.neodigit.net");
             props.put("mail.smtp.starttls.required", "true");
             props.put("mail.smtp.ssl.protocols", "TLSv1.2");
             javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("techidbpo@gmail.com"));
+            message.setFrom(new InternetAddress("bpo.bot@tidinternationalgroup.com"));
 
             InternetAddress listaDirecciones[] = null;
             String horaInicio = "13:50:00";
@@ -2602,21 +2666,32 @@ public class MetodosGenerales {
                 }
 
             } catch (ParseException ex) {
-                Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
 
             if (listaDirecciones != null) {
                 message.addRecipients(Message.RecipientType.TO, listaDirecciones);
-                message.setSubject("BPO:Error en la aplicaci√≥n de sincronizaci√≥n con servicio web");
+                message.setSubject("BPO:Error en la aplicaciÛn de sincronizaciÛn con servicio web");
                 message.setText(textoError);
                 Transport t = session.getTransport("smtp");
-                t.connect("techidbpo@gmail.com", "t3ch1dbp0");
+//                t.connect("techidbpo@gmail.com", "t3ch1dbp0");
+                t.connect("bpo.bot@tidinternationalgroup.com", "ZLtue46=s&#P6I@Pq8F");
+                try
+                {
                 t.sendMessage(message, message.getAllRecipients());
+                }
+                catch (Exception ex) {
+                    Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                }
                 t.close();
             }
 
         } catch (MessagingException ex) {
-
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
@@ -2627,8 +2702,8 @@ public class MetodosGenerales {
     }
 
     /**
-     * @param typeOfAddress 1 direcciones de env√≠o en la ma√±ana de Espa√±a y 2
-     * direcciones de env√≠o en la tarde de Espa√±a
+     * @param typeOfAddress 1 direcciones de envÌo en la maÒana de EspaÒa y 2
+     * direcciones de envÌo en la tarde de EspaÒa
      * @return
      */
     public static ArrayList<String> getAddressList(Integer typeOfAddress) {
