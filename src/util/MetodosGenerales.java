@@ -1472,6 +1472,7 @@ public class MetodosGenerales {
         Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "descargarDocumentos " + tipoDocumento.value());
         System.out.println("descargarDocumentos " + tipoDocumento.value());
         ArrayOfDatosEnvio arrayOfDatosEnvio = null;
+        String nombreDocumento = "";
         try {
             arrayOfDatosEnvio = getPendingDocuments(tipoDocumento);
             System.out.println(tipoDocumento);
@@ -1512,7 +1513,7 @@ public class MetodosGenerales {
                     //if(!existeArchivo(channelSftpTech, documento.getFileName().getValue())){
                     System.out.println(documento.getFileName().getValue());
                     JAXBElement<byte[]> listaBytes = documento.getContent();
-                    String nombreDocumento = documento.getFileName().getValue();
+                    nombreDocumento = documento.getFileName().getValue();
                     String nombreYExt[] = nombreDocumento.split("\\.");
                     if (nombreYExt.length == 1) {
                         nombreDocumento = nombreYExt[0].concat("___").concat(String.valueOf(datosEnvio.getIDSolicitud().getValue())).concat(".").concat("pdf");
@@ -1551,15 +1552,15 @@ public class MetodosGenerales {
             }
         } catch (IOException e) {
             if (e.getMessage() != null) {
-                enviarCorreoNotificacionError(e.getMessage() + "--- ERROR DE ENTRADA SALIDA --- TIPO DE DOCUMENTO:" + tipoDocumento);
+                enviarCorreoNotificacionError(e.getMessage() + "--- ERROR DE ENTRADA SALIDA --- TIPO DE DOCUMENTO:" + tipoDocumento + ". Documento: " + nombreDocumento);
             }
         } catch (SftpException ex) {
             if (ex.getMessage() != null) {
-                enviarCorreoNotificacionError(ex.getMessage() + "--- ERROR CONEXION FTP --- TIPO DE DOCUMENTO:" + tipoDocumento);
+                enviarCorreoNotificacionError(ex.getMessage() + "--- ERROR CONEXION FTP --- TIPO DE DOCUMENTO:" + tipoDocumento + ". Documento: " + nombreDocumento);
             }
         } catch (Exception eWS) {
             if (eWS.getMessage() != null) {
-                enviarCorreoNotificacionError(eWS.getMessage() + "--- ERROR SERVICIO WEB --- TIPO DE DOCUMENTO:" + tipoDocumento);
+                enviarCorreoNotificacionError(eWS.getMessage() + "--- ERROR SERVICIO WEB --- TIPO DE DOCUMENTO:" + tipoDocumento + ". Documento: " + nombreDocumento);
             }
         }
 
@@ -1652,6 +1653,10 @@ public class MetodosGenerales {
         } else if (notificacionTasacion.getExisteError()) {
             System.out.println(notificacionTasacion.getDescripcionExcepcion());
             enviarCorreoNotificacionError(notificacionTasacion.getDescripcionExcepcion());
+        }
+        else if (notificacionRecibo.getExisteError()) {
+            System.out.println(notificacionRecibo.getDescripcionExcepcion());
+            enviarCorreoNotificacionError(notificacionRecibo.getDescripcionExcepcion());
         }
 
         DocumentosSubidos documentosSubidos = new DocumentosSubidos(notificacionNotaSimple.getCantidadDocumentos(),
@@ -1763,7 +1768,7 @@ public class MetodosGenerales {
                                     if (listaParaExt.length == 2) {
                                         notificacion.setDescripcionExcepcion("Error en el documento IRPF con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                     } else {
-                                        notificacion.setDescripcionExcepcion("Error en el nombre del IRPF:" + nombreDocumento);
+                                        notificacion.setDescripcionExcepcion("Error en el nombre del IRPF:" + archivo.getFilename());
                                     }
                                     notificacion.setExisteError(true);
                                     return notificacion;
@@ -1775,12 +1780,15 @@ public class MetodosGenerales {
                 }
             }
 
-            if (arrayOfIRPF != null && arrayOfIRPF.getIRPF().size() > 0) {
+            if (arrayOfIRPF != null && arrayOfIRPF.getIRPF().size() > 0) 
+            {
+                int indice = 0;
+                
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveIRPFs(arrayOfIRPF);
                     List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if (result.getDescripcionResultado().getValue().equals("Grabación correcta")) {
@@ -1799,7 +1807,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveIRPFs: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveIRPFs con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1843,7 +1851,7 @@ public class MetodosGenerales {
                             if (listaParaExt.length == 2) {
                                 notificacion.setDescripcionExcepcion("Error en el documento Nómina con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                             } else {
-                                notificacion.setDescripcionExcepcion("Error en el nombre de la Nómina:" + nombreDocumento);
+                                notificacion.setDescripcionExcepcion("Error en el nombre de la Nómina:" + archivo.getFilename());
                             }
                             notificacion.setExisteError(true);
                             return notificacion;
@@ -1854,11 +1862,13 @@ public class MetodosGenerales {
                 }
             }
             if (arrayOfNomina.getNomina().size() > 0) {
+                int indice = 0;
+                
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveNominas(arrayOfNomina);
                     List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if (result.getDescripcionResultado().getValue().equals("Grabación correcta")) {
@@ -1877,7 +1887,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNominas: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNominas con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1919,7 +1929,7 @@ public class MetodosGenerales {
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento Vida Laboral con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                 } else {
-                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Vida Laboral:" + nombreDocumento);
+                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Vida Laboral:" + archivo.getFilename());
                                 }
                                 notificacion.setExisteError(true);
                                 return notificacion;
@@ -1929,12 +1939,15 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfVidaLaboral.getVidaLaboral().size() > 0) {
+            if (arrayOfVidaLaboral.getVidaLaboral().size() > 0) 
+            {
+                int indice = 0;
+                
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveVidasLaborales(arrayOfVidaLaboral);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -1953,7 +1966,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveVidasLaborales: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveVidasLaborales con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1995,7 +2008,7 @@ public class MetodosGenerales {
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento KO con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                 } else {
-                                    notificacion.setDescripcionExcepcion("Error en el nombre del documento KO:" + nombreDocumento);
+                                    notificacion.setDescripcionExcepcion("Error en el nombre del documento KO:" + archivo.getFilename());
                                 }
                                 notificacion.setExisteError(true);
                                 return notificacion;
@@ -2004,12 +2017,14 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfKODocument.getKODocument().size() > 0) {
+            if (arrayOfKODocument.getKODocument().size() > 0) 
+            {
+                int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveKODocuments(arrayOfKODocument);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if (result.getDescripcionResultado().getValue().equals("Grabación correcta")) {
@@ -2028,7 +2043,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveKODocuments: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveKODocuments con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2070,7 +2085,7 @@ public class MetodosGenerales {
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento Nota Simple OCR con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                 } else {
-                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Nota Simple OCR:" + nombreDocumento);
+                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Nota Simple OCR:" + archivo.getFilename());
                                 }
                                 notificacion.setExisteError(true);
                                 return notificacion;
@@ -2080,12 +2095,14 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().size() > 0) {
+            if (arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().size() > 0) 
+            {
+                int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveNotasSimplesNodulos(arrayOfNotaSimpleNodulos);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2104,7 +2121,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimplesNodulos: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimplesNodulos con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2146,7 +2163,7 @@ public class MetodosGenerales {
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento Recibo con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                 } else {
-                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Recibo:" + nombreDocumento);
+                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Recibo:" + archivo.getFilename());
                                 }
                                 notificacion.setExisteError(true);
                                 return notificacion;
@@ -2156,12 +2173,14 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfRecibo.getRecibo().size() > 0) {
+            if (arrayOfRecibo.getRecibo().size() > 0)
+            {
+                int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveRecibos(arrayOfRecibo);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2180,7 +2199,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveRecibos: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveRecibos con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2222,7 +2241,7 @@ public class MetodosGenerales {
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento Tasacion con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                 } else {
-                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Tasacion:" + nombreDocumento);
+                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Tasacion:" + archivo.getFilename());
                                 }
                                 notificacion.setExisteError(true);
                                 return notificacion;
@@ -2232,12 +2251,14 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfTasacion.getTasacion().size() > 0) {
+            if (arrayOfTasacion.getTasacion().size() > 0) 
+            {
+                int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveTasaciones(arrayOfTasacion);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2256,7 +2277,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveTasaciones: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveTasaciones con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2389,7 +2410,7 @@ public class MetodosGenerales {
                                 if (listaParaExt.length == 2) {
                                     notificacion.setDescripcionExcepcion("Error en el documento Nota Simple con ID=" + listaParaExt[1].split("\\.")[0] + " Descripción:" + ex.getMessage());
                                 } else {
-                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Nota Simple:" + nombreDocumento);
+                                    notificacion.setDescripcionExcepcion("Error en el nombre de la Nota Simple:" + archivo.getFilename());
                                 }
                                 notificacion.setExisteError(true);
                                 return notificacion;
@@ -2415,11 +2436,13 @@ public class MetodosGenerales {
                     indiceNombreNota++;
                 }
                 TimerTaskSchedule.generarTitulares(channelSftpTech, nombreNota, titulares);
+                
+                int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveNotasSimples(arrayOfNotaSimple);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
-                    int indice = 0;
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
                     notificacion.setCantidadDocumentos(lista.size());
+                    
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2438,7 +2461,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimples: " + ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimples con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2453,14 +2476,8 @@ public class MetodosGenerales {
 
     static URL getUrl() {
 
-        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "getUrl ");
-        System.out.println("getUrl ");
-
         String serviceUrl = "";
         try {
-
-            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "file " + direccion.concat("/conf/configFtp_WS.properties"));
-            System.out.println("getUrl file " + direccion.concat("/conf/configFtp_WS.properties"));
 
             File file = new File(direccion.concat("/conf/configFtp_WS.properties"));
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -2469,8 +2486,6 @@ public class MetodosGenerales {
  
             serviceUrl = mainProperties.getProperty("serviceUrl");
 
-            Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "serviceUrl " + serviceUrl);
-            System.out.println("getUrl serviceUrl " + serviceUrl);
             //Cerrando el fichero
             fileInputStream.close();
 
@@ -2564,13 +2579,8 @@ public class MetodosGenerales {
 
     private static ArrayOfDatosEnvio getPendingDocuments(servicios.ConfigurationTTipoDocumento tipoDocumento) {
 
-        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "getPendingDocuments " + tipoDocumento.value());
-        System.out.println("getPendingDocuments " + tipoDocumento.value());
-
         servicios.OcrReceiver service = new servicios.OcrReceiver(getUrl());
 
-        Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "getPendingDocuments service " + service.getWSDLDocumentLocation());
-        System.out.println("getPendingDocuments service " + service.getWSDLDocumentLocation());
         servicios.IOcrReceiver port = service.getBasicHttpBindingIOcrReceiver();
         return port.getPendingDocuments(tipoDocumento);
     }
@@ -2599,12 +2609,12 @@ public class MetodosGenerales {
             
             Properties props = new Properties();
             props.setProperty("mail.smtp.host", "hm667.neodigit.net");
-            props.setProperty("mail.smtp.starttls.enable", "true");
+            props.setProperty("mail.smtp.starttls.enable", "false");
             props.setProperty("mail.smtp.port", "587");
             props.setProperty("mail.smtp.user", "bpo.bot@tidinternationalgroup.com");
             props.setProperty("mail.smtp.auth", "true");
             props.put("mail.smtp.ssl.trust", "hm667.neodigit.net");
-            props.put("mail.smtp.starttls.required", "true");
+            props.put("mail.smtp.starttls.required", "false");
             props.put("mail.smtp.ssl.protocols", "TLSv1.2");
             javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
             MimeMessage message = new MimeMessage(session);
