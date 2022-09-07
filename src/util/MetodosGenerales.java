@@ -1653,8 +1653,7 @@ public class MetodosGenerales {
         } else if (notificacionTasacion.getExisteError()) {
             System.out.println(notificacionTasacion.getDescripcionExcepcion());
             enviarCorreoNotificacionError(notificacionTasacion.getDescripcionExcepcion());
-        }
-        else if (notificacionRecibo.getExisteError()) {
+        } else if (notificacionRecibo.getExisteError()) {
             System.out.println(notificacionRecibo.getDescripcionExcepcion());
             enviarCorreoNotificacionError(notificacionRecibo.getDescripcionExcepcion());
         }
@@ -1780,15 +1779,14 @@ public class MetodosGenerales {
                 }
             }
 
-            if (arrayOfIRPF != null && arrayOfIRPF.getIRPF().size() > 0) 
-            {
+            if (arrayOfIRPF != null && arrayOfIRPF.getIRPF().size() > 0) {
                 int indice = 0;
-                
+
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveIRPFs(arrayOfIRPF);
                     List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if (result.getDescripcionResultado().getValue().equals("Grabación correcta")) {
@@ -1807,7 +1805,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveIRPFs con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveIRPFs con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1863,12 +1861,12 @@ public class MetodosGenerales {
             }
             if (arrayOfNomina.getNomina().size() > 0) {
                 int indice = 0;
-                
+
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveNominas(arrayOfNomina);
                     List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if (result.getDescripcionResultado().getValue().equals("Grabación correcta")) {
@@ -1887,7 +1885,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNominas con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNominas con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -1939,15 +1937,14 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfVidaLaboral.getVidaLaboral().size() > 0) 
-            {
+            if (arrayOfVidaLaboral.getVidaLaboral().size() > 0) {
                 int indice = 0;
-                
+
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveVidasLaborales(arrayOfVidaLaboral);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -1966,7 +1963,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveVidasLaborales con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveVidasLaborales con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2017,14 +2014,13 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfKODocument.getKODocument().size() > 0) 
-            {
+            if (arrayOfKODocument.getKODocument().size() > 0) {
                 int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveKODocuments(arrayOfKODocument);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if (result.getDescripcionResultado().getValue().equals("Grabación correcta")) {
@@ -2043,7 +2039,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveKODocuments con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveKODocuments con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2095,14 +2091,13 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().size() > 0) 
-            {
+            if (arrayOfNotaSimpleNodulos.getNotaSimpleNodulos().size() > 0) {
                 int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveNotasSimplesNodulos(arrayOfNotaSimpleNodulos);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2121,7 +2116,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimplesNodulos con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimplesNodulos con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2173,14 +2168,13 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfRecibo.getRecibo().size() > 0)
-            {
+            if (arrayOfRecibo.getRecibo().size() > 0) {
                 int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveRecibos(arrayOfRecibo);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2199,7 +2193,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveRecibos con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveRecibos con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2251,14 +2245,13 @@ public class MetodosGenerales {
                     }
                 }
             }
-            if (arrayOfTasacion.getTasacion().size() > 0) 
-            {
+            if (arrayOfTasacion.getTasacion().size() > 0) {
                 int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveTasaciones(arrayOfTasacion);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2277,7 +2270,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveTasaciones con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveTasaciones con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2436,13 +2429,13 @@ public class MetodosGenerales {
                     indiceNombreNota++;
                 }
                 TimerTaskSchedule.generarTitulares(channelSftpTech, nombreNota, titulares);
-                
+
                 int indice = 0;
                 try {
                     ArrayOfOCRWSResult arrayOfResult = receiveNotasSimples(arrayOfNotaSimple);
-                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();                    
+                    List<OCRWSResult> lista = arrayOfResult.getOCRWSResult();
                     notificacion.setCantidadDocumentos(lista.size());
-                    
+
                     for (OCRWSResult result : lista) {
                         System.out.println(result.getDescripcionResultado().getValue());
                         if ((result.getDescripcionResultado().getValue().equals("Grabación correcta"))) {
@@ -2461,7 +2454,7 @@ public class MetodosGenerales {
                         indice++;
                     }
                 } catch (Exception ex) {
-                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimples con el archivo: " + listaNombreArchivos.get(indice) + ". Error: "+ ex.getMessage());
+                    notificacion.setDescripcionExcepcion("Error al ejecutar el método receiveNotasSimples con el archivo: " + listaNombreArchivos.get(indice) + ". Error: " + ex.getMessage());
                     notificacion.setExisteError(true);
                     return notificacion;
                 }
@@ -2483,7 +2476,7 @@ public class MetodosGenerales {
             FileInputStream fileInputStream = new FileInputStream(file);
             Properties mainProperties = new Properties();
             mainProperties.load(fileInputStream);
- 
+
             serviceUrl = mainProperties.getProperty("serviceUrl");
 
             //Cerrando el fichero
@@ -2594,6 +2587,21 @@ public class MetodosGenerales {
             Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "enviarCorreoNotificacionError " + textoError);
             System.out.println("enviarCorreoNotificacionError " + textoError);
 
+            File file = new File(direccion.concat("\\conf\\configMail.properties"));
+            FileInputStream fileInputStream = new FileInputStream(file);
+            Properties mainProperties = new Properties();
+            mainProperties.load(fileInputStream);
+
+            String user = mainProperties.getProperty("user");
+
+            String pass = mainProperties.getProperty("pass");
+
+            String host = mainProperties.getProperty("host");
+
+            String port = mainProperties.getProperty("port");
+
+            fileInputStream.close();
+
 //            Properties props = new Properties();
 //            props.setProperty("mail.smtp.host", "smtp.gmail.com");
 //            props.setProperty("mail.smtp.starttls.enable", "true");
@@ -2606,19 +2614,30 @@ public class MetodosGenerales {
 //            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
 //            MimeMessage message = new MimeMessage(session);
 //            message.setFrom(new InternetAddress("techidbpo@gmail.com"));
-            
+//            Properties props = new Properties();
+//            props.setProperty("mail.smtp.host", host);
+//            props.setProperty("mail.smtp.starttls.enable", "false");
+//            props.setProperty("mail.smtp.port", port);
+//            props.setProperty("mail.smtp.user", user);
+//            props.setProperty("mail.smtp.auth", "true");
+//            props.put("mail.smtp.ssl.trust", host);
+//            props.put("mail.smtp.starttls.required", "false");
+//            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+//            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
+//            MimeMessage message = new MimeMessage(session);
+//            message.setFrom(new InternetAddress(user));
             Properties props = new Properties();
-            props.setProperty("mail.smtp.host", "hm667.neodigit.net");
-            props.setProperty("mail.smtp.starttls.enable", "false");
-            props.setProperty("mail.smtp.port", "587");
-            props.setProperty("mail.smtp.user", "bpo.bot@tidinternationalgroup.com");
+            props.setProperty("mail.smtp.host", host);
+            props.setProperty("mail.smtp.starttls.enable", "true");
+            props.setProperty("mail.smtp.port", port);
+            props.setProperty("mail.smtp.user", user);
             props.setProperty("mail.smtp.auth", "true");
-            props.put("mail.smtp.ssl.trust", "hm667.neodigit.net");
-            props.put("mail.smtp.starttls.required", "false");
+            props.put("mail.smtp.ssl.trust", host);
+            props.put("mail.smtp.starttls.required", "true");
             props.put("mail.smtp.ssl.protocols", "TLSv1.2");
             javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("bpo.bot@tidinternationalgroup.com"));
+            message.setFrom(new InternetAddress(user));
 
             InternetAddress listaDirecciones[] = null;
             String horaInicio = "13:50:00";
@@ -2687,12 +2706,10 @@ public class MetodosGenerales {
                 message.setText(textoError);
                 Transport t = session.getTransport("smtp");
 //                t.connect("techidbpo@gmail.com", "t3ch1dbp0");
-                t.connect("bpo.bot@tidinternationalgroup.com", "ZLtue46=s&#P6I@Pq8F");
-                try
-                {
-                t.sendMessage(message, message.getAllRecipients());
-                }
-                catch (Exception ex) {
+                t.connect(user, pass);
+                try {
+                    t.sendMessage(message, message.getAllRecipients());
+                } catch (Exception ex) {
                     Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
                 }
                 t.close();

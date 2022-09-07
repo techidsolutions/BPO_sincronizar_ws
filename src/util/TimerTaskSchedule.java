@@ -12,6 +12,7 @@ import com.jcraft.jsch.SftpException;
 import datos.DatosDocumento;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,6 +55,21 @@ public class TimerTaskSchedule {
             Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "enviarCorreoNotificacion " + asunto + " , " + texto + " , " + tipo);
             System.out.println("enviarCorreoNotificacion " + asunto + " , " + texto + " , " + tipo);
 
+            File file = new File(direccion.concat("\\conf\\configMail.properties"));
+            FileInputStream fileInputStream = new FileInputStream(file);
+            Properties mainProperties = new Properties();
+            mainProperties.load(fileInputStream);
+
+            String user = mainProperties.getProperty("user");
+
+            String pass = mainProperties.getProperty("pass");
+
+            String host = mainProperties.getProperty("host");
+
+            String port = mainProperties.getProperty("port");
+
+            fileInputStream.close();
+
 //            Properties props = new Properties();
 //            props.setProperty("mail.smtp.host", "smtp.gmail.com");
 //            props.setProperty("mail.smtp.starttls.enable", "true");
@@ -67,19 +83,32 @@ public class TimerTaskSchedule {
 //            MimeMessage message = new MimeMessage(session);
 //            message.setFrom(new InternetAddress("techidbpo@gmail.com"));
             
+//            Properties props = new Properties();
+//            props.setProperty("mail.smtp.host", host);
+//            props.setProperty("mail.smtp.starttls.enable", "false");
+//            props.setProperty("mail.smtp.port", port);
+//            props.setProperty("mail.smtp.user", user);
+//            props.setProperty("mail.smtp.auth", "true");
+//            props.put("mail.smtp.ssl.trust", host);
+//            props.put("mail.smtp.starttls.required", "false");
+//            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+//            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
+//            MimeMessage message = new MimeMessage(session);
+//            message.setFrom(new InternetAddress(user));
+            
             Properties props = new Properties();
-            props.setProperty("mail.smtp.host", "hm667.neodigit.net");
-            props.setProperty("mail.smtp.starttls.enable", "false");
-            props.setProperty("mail.smtp.port", "587");
-            props.setProperty("mail.smtp.user", "bpo.bot@tidinternationalgroup.com");
+            props.setProperty("mail.smtp.host", host);
+            props.setProperty("mail.smtp.starttls.enable", "true");
+            props.setProperty("mail.smtp.port", port);
+            props.setProperty("mail.smtp.user", user);
             props.setProperty("mail.smtp.auth", "true");
-            props.put("mail.smtp.ssl.trust", "hm667.neodigit.net");
-            props.put("mail.smtp.starttls.required", "false");
+            props.put("mail.smtp.ssl.trust", host);
+            props.put("mail.smtp.starttls.required", "true");
             props.put("mail.smtp.ssl.protocols", "TLSv1.2");
             javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("bpo.bot@tidinternationalgroup.com"));
-            
+            message.setFrom(new InternetAddress(user));
+
             InternetAddress listaDirecciones[] = null;
             String horaInicio = "13:50:00";
             String horaFin = "23:00:00";
@@ -151,12 +180,10 @@ public class TimerTaskSchedule {
                 message.setText(texto);
                 Transport t = session.getTransport("smtp");
 //                t.connect("techidbpo@gmail.com", "t3ch1dbp0");
-                t.connect("bpo.bot@tidinternationalgroup.com", "ZLtue46=s&#P6I@Pq8F");
-                try
-                {
-                t.sendMessage(message, message.getAllRecipients());
-                }
-                catch (Exception ex) {
+                t.connect(user, pass);
+                try {
+                    t.sendMessage(message, message.getAllRecipients());
+                } catch (Exception ex) {
                     Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
                 }
                 t.close();
@@ -427,7 +454,7 @@ public class TimerTaskSchedule {
                 if (channelSftpTech != null) {
                     resultadoSubida = MetodosGenerales.subirDocumentos(channelSftpTech);
                 }
-                if (resultadoSubida!= null && resultadoSubida.getResultado()) {
+                if (resultadoSubida != null && resultadoSubida.getResultado()) {
                     enviarCorreoNotificacion("BPO utilizando servicio web:Documentos subidos", "TECH ID Solutions: Se han subido " + resultadoSubida.getDocumentosSubidos().getCantTotal() + " documentos a Grupo BC:\n"
                             + "Nota Simple:" + resultadoSubida.getDocumentosSubidos().getCantidadNotas() + "\n"
                             + "IRPF:" + resultadoSubida.getDocumentosSubidos().getCantidadIRPF() + "\n"
