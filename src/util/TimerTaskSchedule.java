@@ -55,7 +55,7 @@ public class TimerTaskSchedule {
             Logger.getLogger(SincronizarRepoGrupoBC.class.getName()).log(Level.INFO, "enviarCorreoNotificacion " + asunto + " , " + texto + " , " + tipo);
             System.out.println("enviarCorreoNotificacion " + asunto + " , " + texto + " , " + tipo);
 
-            File file = new File(direccion.concat("\\conf\\configMail.properties"));
+            File file = new File(direccion.concat("/conf/configMail.properties"));
             FileInputStream fileInputStream = new FileInputStream(file);
             Properties mainProperties = new Properties();
             mainProperties.load(fileInputStream);
@@ -105,6 +105,8 @@ public class TimerTaskSchedule {
             props.put("mail.smtp.ssl.trust", host);
             props.put("mail.smtp.starttls.required", "true");
             props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+//            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                        
             javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(user));
