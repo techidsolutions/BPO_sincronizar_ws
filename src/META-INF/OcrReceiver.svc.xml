@@ -5,7 +5,8 @@
             <wsp1:All>
                 <sc:CallbackHandlerConfiguration wspp:visibility="private">
                     <sc:CallbackHandler default="TID" name="usernameHandler"/>
-                    <sc:CallbackHandler default="WebgtmriRElp459shd" name="passwordHandler"/>
+                    <sc:CallbackHandler default="TID" name="passwordHandler"/>
+                    <!--<sc:CallbackHandler default="WebgtmriRElp459shd" name="passwordHandler"/>-->
                 </sc:CallbackHandlerConfiguration>
             </wsp1:All>
         </wsp1:ExactlyOne>
